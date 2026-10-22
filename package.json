@@ -15,6 +15,7 @@
     "@capacitor/cli": "^8.5.3",
     "@capacitor/core": "^8.5.3",
     "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/local-notifications": "^8.3.1",
     "echarts": "^6.1.0",
     "pinia": "^4.1.0",
     "tesseract.js": "^7.0.0",

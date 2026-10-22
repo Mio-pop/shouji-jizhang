@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { NewRecordInput, RecordItem, Summary } from '../types'
+import { cancelTodayReminder } from '../utils/reminder'
 
 const STORAGE_KEY = 'smart-ledger.records'
 
@@ -109,6 +110,8 @@ export const useRecordsStore = defineStore('records', () => {
     records.value = [...created, ...records.value]
     persist()
     highlight(created.map((item) => item.id))
+    // 今天已经记过，取消今晚的提醒
+    void cancelTodayReminder()
     return created
   }
 

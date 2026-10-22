@@ -7,6 +7,8 @@ import { App as NativeApp } from '@capacitor/app'
 import App from './App.vue'
 import router from './router'
 import { isFancy } from './motion'
+import { useRecordsStore } from './stores/records'
+import { onReminderTap, scheduleReminderWindow } from './utils/reminder'
 import './style.css'
 
 document.documentElement.dataset.motion = isFancy ? 'fancy' : 'simple'
@@ -73,5 +75,16 @@ if (Capacitor.isNativePlatform()) {
     requestAnimationFrame(() => {
       root.style.opacity = ''
     })
+  })
+
+  // 每晚 21:00 提醒记账：滚动排 7 天，今天已记则跳过今晚
+  const store = useRecordsStore()
+  window.setTimeout(() => {
+    void scheduleReminderWindow(store.getTodaySummary().count > 0)
+  }, 1200)
+
+  // 点通知直接进记账页
+  onReminderTap(() => {
+    void router.isReady().then(() => router.replace('/record'))
   })
 }
