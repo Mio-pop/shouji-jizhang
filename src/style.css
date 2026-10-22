@@ -1,0 +1,989 @@
+:root {
+  --app-bg: #f7f8fa;
+  --app-text: #1f2329;
+  --app-text-secondary: #8a8f99;
+  --app-primary: #4a7cf6;
+  --app-income: #07c160;
+  --app-expense: #ee0a24;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--app-text);
+  background: var(--app-bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--app-bg);
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- 动效：data-motion 由构建时的 VITE_MOTION 决定 ---------- */
+@keyframes m-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes m-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.m-rise {
+  animation-fill-mode: both;
+}
+
+[data-motion='simple'] .m-rise {
+  animation: m-fade-in 150ms ease-out both;
+}
+
+[data-motion='fancy'] .m-rise {
+  animation: m-rise 420ms cubic-bezier(0.22, 0.9, 0.28, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+/* 按压反馈 */
+button,
+.van-button,
+.stats__cat,
+.stats__chip {
+  transition:
+    transform 110ms ease,
+    opacity 110ms ease;
+}
+
+button:active,
+.van-button:active {
+  transform: scale(0.97);
+}
+
+/* 路由切换 */
+.m-fade-enter-active,
+.m-fade-leave-active {
+  transition: opacity 150ms ease;
+}
+
+.m-fade-enter-from,
+.m-fade-leave-to {
+  opacity: 0;
+}
+
+/* 路由切换：纸账本按 Tab 方向推入 / 拉回 */
+@keyframes m-push-in {
+  from {
+    opacity: 0;
+    transform: translateX(64px) rotate(0.8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes m-pull-in {
+  from {
+    opacity: 0;
+    transform: translateX(-64px) rotate(-0.8deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.m-push-enter-active {
+  animation: m-push-in 340ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.m-pull-enter-active {
+  animation: m-pull-in 340ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.m-push-leave-active,
+.m-pull-leave-active {
+  transition: opacity 120ms ease;
+}
+
+.m-push-leave-to,
+.m-pull-leave-to {
+  opacity: 0;
+}
+
+/* 底部导航图标 */
+.van-tabbar-item__icon {
+  transition: transform 180ms ease;
+}
+
+[data-motion='fancy'] .van-tabbar-item--active .van-tabbar-item__icon {
+  transform: translateY(-2px) scale(1.1);
+}
+
+[data-motion='simple'] .van-tabbar-item--active .van-tabbar-item__icon {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-rise,
+  .m-fade-enter-active,
+  .m-fade-leave-active,
+  .m-push-enter-active,
+  .m-pull-enter-active,
+  .m-push-leave-active,
+  .m-pull-leave-active {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================================================
+   主题二：纸账本（Direction A）
+   米白横格纸 / 衬线数字 / 双线合计 / 朱红印章
+   ========================================================= */
+html[data-theme='paper'] {
+  --paper-bg: #f6f1e6;
+  --paper-panel: #fbf7ee;
+  --paper-ink: #2b2b26;
+  --paper-line: #bfb49c;
+  --paper-muted: #6b6355;
+  --paper-red: #a8332a;
+  --paper-green: #1a5c3d;
+}
+
+html[data-theme='paper'] body {
+  background-color: var(--paper-bg);
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0 25px,
+    rgba(31, 42, 56, 0.06) 25px 26px
+  );
+  color: var(--paper-ink);
+  font-family: 'Songti SC', 'STSong', 'SimSun', Georgia, serif;
+}
+
+html[data-theme='paper'] .app,
+html[data-theme='paper'] .home,
+html[data-theme='paper'] .parse,
+html[data-theme='paper'] .record,
+html[data-theme='paper'] .stats,
+html[data-theme='paper'] .profile {
+  background: transparent !important;
+  color: var(--paper-ink);
+}
+
+html[data-theme='paper'] .van-nav-bar {
+  background: transparent !important;
+  border-bottom: 3px double var(--paper-ink) !important;
+  box-shadow: none;
+}
+
+html[data-theme='paper'] .van-nav-bar__title {
+  color: var(--paper-ink) !important;
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+html[data-theme='paper'] .van-nav-bar .van-icon,
+html[data-theme='paper'] .van-nav-bar__text {
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .home__header {
+  background: transparent;
+  padding: 20px 20px 40px;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+html[data-theme='paper'] .home__title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: var(--paper-ink);
+  text-shadow: none;
+}
+
+html[data-theme='paper'] .home__date {
+  color: var(--paper-muted);
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+html[data-theme='paper'] .home__icon {
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .summary,
+html[data-theme='paper'] .month,
+html[data-theme='paper'] .recent,
+html[data-theme='paper'] .record__panel,
+html[data-theme='paper'] .record__list,
+html[data-theme='paper'] .stats__card,
+html[data-theme='paper'] .stats__filter,
+html[data-theme='paper'] .stats__result,
+html[data-theme='paper'] .stats__list,
+html[data-theme='paper'] .draft,
+html[data-theme='paper'] .parse__uploader,
+html[data-theme='paper'] .profile__card,
+html[data-theme='paper'] .van-cell-group--inset {
+  background: var(--paper-panel) !important;
+  border: 1px solid var(--paper-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme='paper'] .summary {
+  border-top: 3px double var(--paper-ink) !important;
+  border-bottom: 3px double var(--paper-ink) !important;
+  border-left: none !important;
+  border-right: none !important;
+  padding: 18px 20px;
+}
+
+html[data-theme='paper'] .summary__label {
+  color: var(--paper-muted) !important;
+  letter-spacing: 3px;
+  font-size: 11px;
+}
+
+html[data-theme='paper'] .summary__balance {
+  font-size: 40px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--paper-ink) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-theme='paper'] .summary__balance--minus {
+  color: var(--paper-red) !important;
+}
+
+html[data-theme='paper'] .summary__item-label,
+html[data-theme='paper'] .stats__label,
+html[data-theme='paper'] .stats__result-desc,
+html[data-theme='paper'] .recent__meta,
+html[data-theme='paper'] .recent__count,
+html[data-theme='paper'] .draft__meta,
+html[data-theme='paper'] .stats__list-head,
+html[data-theme='paper'] .record__list-head,
+html[data-theme='paper'] .parse__uploader-tip,
+html[data-theme='paper'] .profile__desc {
+  color: var(--paper-muted) !important;
+}
+
+html[data-theme='paper'] .summary__item-value,
+html[data-theme='paper'] .month__title,
+html[data-theme='paper'] .month__amount,
+html[data-theme='paper'] .recent__title,
+html[data-theme='paper'] .recent__category,
+html[data-theme='paper'] .recent__amount,
+html[data-theme='paper'] .stats__value,
+html[data-theme='paper'] .stats__result-value,
+html[data-theme='paper'] .stats__result-title,
+html[data-theme='paper'] .stats__filter-head,
+html[data-theme='paper'] .draft__category,
+html[data-theme='paper'] .drafts__title,
+html[data-theme='paper'] .profile__name,
+html[data-theme='paper'] .summary__item-value {
+  color: var(--paper-ink) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-theme='paper'] .recent__amount--income,
+html[data-theme='paper'] .month__income,
+html[data-theme='paper'] .stats__value--income,
+html[data-theme='paper'] .draft__amount--income {
+  color: var(--paper-green) !important;
+}
+
+html[data-theme='paper'] .month__more,
+html[data-theme='paper'] .drafts__toggle,
+html[data-theme='paper'] .stats__filter-reset {
+  color: var(--paper-red) !important;
+  font-weight: 700;
+}
+
+html[data-theme='paper'] .summary__divider {
+  background: var(--paper-line) !important;
+}
+
+html[data-theme='paper'] .actions__btn {
+  background: var(--paper-panel) !important;
+  border: 1px solid var(--paper-ink) !important;
+  border-radius: 0 !important;
+  color: var(--paper-ink) !important;
+  box-shadow: none;
+  font-family: inherit;
+  letter-spacing: 1px;
+}
+
+html[data-theme='paper'] .actions__btn--primary {
+  background: var(--paper-ink) !important;
+  color: var(--paper-bg) !important;
+}
+
+html[data-theme='paper'] .van-button--primary {
+  background: var(--paper-ink) !important;
+  border: 1px solid var(--paper-ink) !important;
+  border-radius: 0 !important;
+  color: var(--paper-bg) !important;
+  box-shadow: none !important;
+  letter-spacing: 1px;
+}
+
+html[data-theme='paper'] .van-button--default,
+html[data-theme='paper'] .van-button--plain {
+  background: var(--paper-panel) !important;
+  border: 1px solid var(--paper-ink) !important;
+  border-radius: 0 !important;
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-button--danger {
+  background: transparent !important;
+  border: 1px solid var(--paper-red) !important;
+  border-radius: 0 !important;
+  color: var(--paper-red) !important;
+}
+
+html[data-theme='paper'] .record__chip,
+html[data-theme='paper'] .stats__cat,
+html[data-theme='paper'] .stats__chip,
+html[data-theme='paper'] .parse__mode,
+html[data-theme='paper'] .record__type,
+html[data-theme='paper'] .editor__type,
+html[data-theme='paper'] .stats__type {
+  background: var(--paper-panel) !important;
+  border: 1px solid var(--paper-line) !important;
+  border-radius: 0 !important;
+  color: var(--paper-ink) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme='paper'] .record__chip--active,
+html[data-theme='paper'] .stats__cat--active,
+html[data-theme='paper'] .parse__mode--active,
+html[data-theme='paper'] .record__type--active,
+html[data-theme='paper'] .editor__type--active,
+html[data-theme='paper'] .stats__type--active,
+html[data-theme='paper'] .stats__chip--active {
+  background: var(--paper-ink) !important;
+  border-color: var(--paper-ink) !important;
+  color: var(--paper-bg) !important;
+}
+
+html[data-theme='paper'] .draft__type {
+  border: 1px solid var(--paper-line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--paper-muted) !important;
+}
+
+html[data-theme='paper'] .draft__type--expense {
+  color: var(--paper-red) !important;
+}
+
+html[data-theme='paper'] .draft__type--income {
+  color: var(--paper-green) !important;
+}
+
+html[data-theme='paper'] .recent__item {
+  border-bottom: 1px dashed var(--paper-line) !important;
+  background: transparent !important;
+}
+
+html[data-theme='paper'] .recent__cell,
+html[data-theme='paper'] .van-swipe-cell,
+html[data-theme='paper'] .van-swipe-cell__wrapper {
+  background: transparent !important;
+}
+
+html[data-theme='paper'] .recent__icon {
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: 1px solid var(--paper-ink);
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-tag--primary {
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: 1px solid var(--paper-red) !important;
+  color: var(--paper-red) !important;
+}
+
+html[data-theme='paper'] .van-cell,
+html[data-theme='paper'] .van-cell__title,
+html[data-theme='paper'] .van-cell__label,
+html[data-theme='paper'] .van-cell__value,
+html[data-theme='paper'] .van-field__label,
+html[data-theme='paper'] .van-field__control,
+html[data-theme='paper'] .van-checkbox__label {
+  color: var(--paper-ink) !important;
+  background: transparent !important;
+}
+
+html[data-theme='paper'] .van-cell::after,
+html[data-theme='paper'] .van-field::after {
+  border-color: var(--paper-line) !important;
+}
+
+html[data-theme='paper'] .van-field__control::placeholder {
+  color: #7d7566 !important;
+}
+
+html[data-theme='paper'] .parse__body > .van-field,
+html[data-theme='paper'] .record__panel > .van-field,
+html[data-theme='paper'] .editor .van-field,
+html[data-theme='paper'] .sheet .van-field {
+  margin: 8px 0;
+  background: transparent !important;
+  border-bottom: 1px solid var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-popup {
+  background: var(--paper-bg) !important;
+  color: var(--paper-ink);
+  border-top: 3px double var(--paper-ink);
+}
+
+html[data-theme='paper'] .sheet__title,
+html[data-theme='paper'] .editor__title,
+html[data-theme='paper'] .theme-picker__title {
+  color: var(--paper-ink) !important;
+  letter-spacing: 3px;
+}
+
+html[data-theme='paper'] .sheet__amount-value {
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-picker,
+html[data-theme='paper'] .van-picker__toolbar,
+html[data-theme='paper'] .van-picker-column__item,
+html[data-theme='paper'] .van-picker__title {
+  background: var(--paper-bg) !important;
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-picker__confirm {
+  color: var(--paper-red) !important;
+}
+
+html[data-theme='paper'] .van-calendar,
+html[data-theme='paper'] .van-calendar__header,
+html[data-theme='paper'] .van-calendar__weekdays,
+html[data-theme='paper'] .van-calendar__day,
+html[data-theme='paper'] .van-calendar__title,
+html[data-theme='paper'] .van-calendar__subtitle,
+html[data-theme='paper'] .van-calendar__footer {
+  background: var(--paper-bg) !important;
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-calendar__selected-day {
+  background: var(--paper-red) !important;
+  color: var(--paper-bg) !important;
+  border-radius: 50% !important;
+}
+
+html[data-theme='paper'] .van-calendar__confirm {
+  background: var(--paper-ink) !important;
+  color: var(--paper-bg) !important;
+  border-radius: 0 !important;
+}
+
+html[data-theme='paper'] .van-tabbar {
+  background: var(--paper-bg) !important;
+  border-top: 3px double var(--paper-ink) !important;
+  box-shadow: none;
+}
+
+html[data-theme='paper'] .van-tabbar-item {
+  color: var(--paper-muted) !important;
+}
+
+html[data-theme='paper'] .van-tabbar-item--active {
+  color: var(--paper-ink) !important;
+  background: transparent !important;
+}
+
+html[data-theme='paper'] .van-tabbar-item--active .van-tabbar-item__text::after {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 2px;
+  margin: 4px auto 0;
+  background: var(--paper-red);
+}
+
+html[data-theme='paper'] .van-overlay {
+  background: rgba(43, 43, 38, 0.45) !important;
+}
+
+html[data-theme='paper'] .van-empty__description,
+html[data-theme='paper'] .empty__desc {
+  color: var(--paper-muted) !important;
+}
+
+html[data-theme='paper'] .empty__title {
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .profile__avatar {
+  border-radius: 50% !important;
+  background: transparent !important;
+  border: 1px solid var(--paper-ink);
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-checkbox__icon .van-icon {
+  background: transparent !important;
+  border: 1px solid var(--paper-ink) !important;
+  border-radius: 0 !important;
+  color: transparent !important;
+}
+
+html[data-theme='paper'] .van-checkbox__icon--checked .van-icon {
+  background: var(--paper-ink) !important;
+  color: var(--paper-bg) !important;
+}
+
+html[data-theme='paper'] .parse__raw {
+  background: var(--paper-panel) !important;
+  color: var(--paper-muted) !important;
+  border: 1px solid var(--paper-line);
+  border-left: 4px solid var(--paper-red);
+}
+
+html[data-theme='paper'] .van-uploader__upload {
+  background: transparent !important;
+  border: 1px dashed var(--paper-ink) !important;
+  border-radius: 0 !important;
+  color: var(--paper-muted) !important;
+}
+
+html[data-theme='paper'] .van-uploader__preview-image {
+  border-radius: 0 !important;
+  border: 1px solid var(--paper-ink);
+}
+
+html[data-theme='paper'] .van-field__word-limit {
+  color: var(--paper-muted) !important;
+}
+
+html[data-theme='paper'] .theme-picker__item {
+  border-color: var(--paper-line);
+  border-radius: 0;
+}
+
+html[data-theme='paper'] .theme-picker__item--on {
+  border-color: var(--paper-red);
+}
+
+/* =========================================================
+   纸账本的动效：纸张落下 / 落章
+   ========================================================= */
+@keyframes paper-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) rotate(-0.6deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes paper-underline {
+  from {
+    width: 0;
+  }
+  to {
+    width: 16px;
+  }
+}
+
+@keyframes paper-stamp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-18deg) scale(1.7);
+  }
+  38% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.95);
+  }
+  72% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-12deg) scale(1);
+  }
+}
+
+[data-theme='paper'] .m-rise {
+  animation: paper-in 300ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+[data-theme='paper'] .van-tabbar-item--active .van-tabbar-item__text::after {
+  animation: paper-underline 220ms ease-out both;
+}
+
+[data-theme='paper'] .actions__btn:active,
+[data-theme='paper'] .van-button--primary:active {
+  transform: translateY(1px);
+  box-shadow: none !important;
+}
+
+[data-theme='paper'] .burst__dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--paper-red);
+  box-shadow: none;
+}
+
+[data-theme='paper'] .burst__ring {
+  border: 1px dashed rgba(168, 51, 42, 0.7);
+}
+
+[data-theme='paper'] .burst__label {
+  width: 76px;
+  height: 76px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: var(--paper-red);
+  background: rgba(251, 247, 238, 0.92);
+  border: 3px solid var(--paper-red);
+  border-radius: 50%;
+  text-shadow: none;
+  animation: paper-stamp 820ms ease-out both;
+}
+
+/* 保存特效的通用文案层，具体样式由各主题覆盖 */
+.burst__label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #fff;
+  animation: burst-label 760ms ease-out both;
+}
+
+@keyframes burst-label {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+  30% { opacity: 1; transform: translate(-50%, -50%) scale(0.94); }
+  70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.02); }
+}
+
+/* =========================================================
+   纸账本：细节与动效打磨
+   ========================================================= */
+html[data-theme='paper'] .summary {
+  position: relative;
+  overflow: visible;
+}
+
+/* 结余卡右上角的朱红印章（仅纸账本显示） */
+.summary__stamp {
+  display: none;
+}
+
+html[data-theme='paper'] .summary__stamp {
+  display: flex;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--paper-red);
+  border-radius: 50%;
+  color: var(--paper-red);
+  font-size: 11px;
+  letter-spacing: 2px;
+  opacity: 0.75;
+  transform: rotate(-12deg);
+  animation: paper-stamp-in 520ms ease-out both;
+  pointer-events: none;
+}
+
+@keyframes paper-stamp-in {
+  from {
+    opacity: 0;
+    transform: rotate(-28deg) scale(1.6);
+  }
+  to {
+    opacity: 0.75;
+    transform: rotate(-12deg) scale(1);
+  }
+}
+
+/* 列表左侧的朱红页边线 */
+html[data-theme='paper'] .recent,
+html[data-theme='paper'] .record__list,
+html[data-theme='paper'] .stats__list {
+  border-left: 3px solid rgba(168, 51, 42, 0.5) !important;
+}
+
+/* 记录行按下：纸上洇开一点红 */
+html[data-theme='paper'] .recent__item:active {
+  background: rgba(168, 51, 42, 0.05) !important;
+}
+
+/* Tab 下划线：像一道笔画 */
+html[data-theme='paper'] .van-tabbar-item--active .van-tabbar-item__text::after {
+  height: 3px;
+  border-radius: 2px;
+  transform: rotate(-1.5deg);
+}
+
+/* 保存：纸面轻震 + 落章 */
+html[data-theme='paper'] .burst {
+  animation: paper-shake 240ms ease-out both;
+}
+
+@keyframes paper-shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2px, 1px);
+  }
+  55% {
+    transform: translate(2px, -1px);
+  }
+  80% {
+    transform: translate(-1px, 0);
+  }
+}
+
+/* 结余数字再放大一档，衬线更有账本味 */
+html[data-theme='paper'] .summary__balance {
+  font-size: 42px;
+}
+
+/* =========================================================
+   交互反馈：新记录高亮 / 撕纸删除 / 输入聚焦
+   ========================================================= */
+.roll {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+/* 刚保存的那一条：左侧朱红条闪一下 */
+@keyframes paper-new-row {
+  0% {
+    background: rgba(168, 51, 42, 0.16);
+    box-shadow: inset 3px 0 0 var(--paper-red);
+  }
+  70% {
+    background: rgba(168, 51, 42, 0.06);
+    box-shadow: inset 3px 0 0 var(--paper-red);
+  }
+  100% {
+    background: transparent;
+    box-shadow: inset 3px 0 0 transparent;
+  }
+}
+
+html[data-theme='paper'] .is-new {
+  animation: paper-new-row 1200ms ease-out both;
+}
+
+/* 删除：像把这一页撕下来 */
+@keyframes paper-tear {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(96px) rotate(3deg) scale(0.99);
+  }
+}
+
+html[data-theme='paper'] .is-tearing {
+  animation: paper-tear 340ms ease-in both;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* =========================================================
+   提示消息框 / 确认弹窗：纸账本语言
+   ========================================================= */
+html[data-theme='paper'] .van-toast {
+  width: auto;
+  min-width: 0;
+  max-width: 78vw;
+  padding: 12px 18px;
+  border: 2px solid var(--paper-ink) !important;
+  border-radius: 0 !important;
+  background: var(--paper-panel) !important;
+  box-shadow:
+    inset 3px 0 0 var(--paper-red),
+    5px 5px 0 rgba(43, 43, 38, 0.22);
+  color: var(--paper-ink) !important;
+  font-size: 13px;
+  letter-spacing: 1px;
+  line-height: 1.6;
+}
+
+html[data-theme='paper'] .van-toast__text {
+  color: var(--paper-ink) !important;
+  padding: 0 !important;
+}
+
+html[data-theme='paper'] .van-toast--text {
+  width: auto;
+  min-width: 0;
+}
+
+html[data-theme='paper'] .van-toast .van-icon {
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .van-dialog {
+  border: 2px solid var(--paper-ink);
+  border-radius: 0;
+  background: var(--paper-panel);
+  box-shadow: 8px 8px 0 rgba(43, 43, 38, 0.22);
+}
+
+html[data-theme='paper'] .van-dialog__header {
+  color: var(--paper-ink);
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding-top: 20px;
+}
+
+html[data-theme='paper'] .van-dialog__message {
+  color: var(--paper-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+html[data-theme='paper'] .van-dialog__footer {
+  border-top: 1px dashed var(--paper-line);
+}
+
+html[data-theme='paper'] .van-dialog__confirm {
+  color: var(--paper-red);
+  font-weight: 700;
+}
+
+html[data-theme='paper'] .van-dialog__cancel {
+  color: var(--paper-muted);
+}
+
+/* 解析页输入框：清晰的黑框，聚焦时转朱红 */
+html[data-theme='paper'] .parse__body > .van-field {
+  padding: 12px 12px 14px;
+  background: var(--paper-panel) !important;
+  border: 2px solid var(--paper-ink) !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+}
+
+html[data-theme='paper'] .parse__body > .van-field::before {
+  display: none;
+}
+
+/* 去掉 Vant 自带的半像素下边线，避免和 2px 黑框叠成双线 */
+html[data-theme='paper'] .parse__body > .van-field::after {
+  display: none;
+}
+
+html[data-theme='paper'] .parse__body > .van-field:focus-within {
+  border-color: var(--paper-red) !important;
+  box-shadow: 0 0 0 3px rgba(168, 51, 42, 0.12);
+}
+
+html[data-theme='paper'] .parse__body > .van-field .van-field__body {
+  padding: 2px 0;
+}
+
+/* 输入聚焦：朱红细线从中间向两侧延展 */
+html[data-theme='paper'] .parse__body > .van-field,
+html[data-theme='paper'] .record__panel > .van-field,
+html[data-theme='paper'] .editor .van-field,
+html[data-theme='paper'] .sheet .van-field {
+  position: relative;
+}
+
+html[data-theme='paper'] .parse__body > .van-field::before,
+html[data-theme='paper'] .record__panel > .van-field::before,
+html[data-theme='paper'] .editor .van-field::before,
+html[data-theme='paper'] .sheet .van-field::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--paper-red);
+  transform: scaleX(0);
+  transition: transform 220ms ease;
+  pointer-events: none;
+}
+
+html[data-theme='paper'] .parse__body > .van-field:focus-within::before,
+html[data-theme='paper'] .record__panel > .van-field:focus-within::before,
+html[data-theme='paper'] .editor .van-field:focus-within::before,
+html[data-theme='paper'] .sheet .van-field:focus-within::before {
+  transform: scaleX(1);
+}
