@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
-import { isFancy } from './motion'
 
 /** Tab 顺序决定转场方向：向右切换是推入，向左切换是拉回 */
 const ORDER = ['/', '/parse', '/record', '/stats', '/profile']
-const transitionName = ref(isFancy ? 'm-push' : 'm-fade')
+const transitionName = ref('m-push')
 const router = useRouter()
 
 router.beforeEach((to, from) => {
-  if (!isFancy) return
   const fromIndex = ORDER.indexOf(from.path)
   const toIndex = ORDER.indexOf(to.path)
   if (fromIndex === -1 || toIndex === -1) return

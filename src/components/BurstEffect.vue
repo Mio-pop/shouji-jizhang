@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
-import { isFancy } from '../motion'
 
 const active = ref(false)
 let timer: number | undefined
 
-/** 保存成功时的轻量庆祝效果：纸张主题下为朱红「已记」印章，仅华丽版触发 */
+/** 保存成功时的轻量庆祝效果：朱红「已记」印章 */
 function burst(): void {
-  if (!isFancy) return
   active.value = false
   requestAnimationFrame(() => {
     active.value = true

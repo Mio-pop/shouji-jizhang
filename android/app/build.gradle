@@ -1,9 +1,5 @@
 apply plugin: 'com.android.application'
 
-// 两种动效构建：-Pflavor=fancy / -Pflavor=simple（默认）
-def appFlavor = project.hasProperty('flavor') ? project.property('flavor').toString() : 'simple'
-def isFancyBuild = appFlavor == 'fancy'
-
 // 签名信息放在 signing.properties（已加入 .gitignore），不随仓库分发
 def signingPropsFile = rootProject.file('signing.properties')
 def signingProps = new Properties()
@@ -15,11 +11,11 @@ android {
     namespace = "com.mio.ledger"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId isFancyBuild ? 'com.mio.ledger.fancy' : 'com.mio.ledger'
+        applicationId 'com.mio.ledger.fancy'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // versionCode 必须持续递增（安装覆盖用），对外显示版本统一为 1.1
-        versionCode 10
+        versionCode 11
         versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {

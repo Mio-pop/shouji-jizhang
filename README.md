@@ -13,7 +13,7 @@
 
 首次启动会申请通知权限，用于每晚 21:00 的记账提醒：
 
-- 使用**非精确闹钟**（不申请 `SCHEDULE_EXACT_ALARM`），系统可能延后几分钟，属于正常现象
+- 使用非精确闹钟（不申请 `SCHEDULE_EXACT_ALARM`），系统可能延后几分钟，属于正常现象
 - 当天记过账会自动取消当晚的提醒
 - 拒绝通知权限不影响任何记账功能，只是收不到提醒
 - 部分国产 ROM 需要允许「自启动」并关闭电池优化，否则提醒可能被系统拦截
@@ -31,63 +31,29 @@ src/                 # 页面、组件、store、解析与 OCR
   utils/parse.ts     # 文本解析（多条记录、商户行关联、噪音过滤）
   utils/ocr.ts       # 原生 ML Kit / Web tesseract 双通道
 android/             # Capacitor Android 工程
-docs/                # GitHub Pages 下载页（含发布的 APK）
+docs/                # 静态下载页（含发布的 APK）
 ```
 
 ## 本地开发
 
 ```bash
 npm install
-npm run dev                    # 简约版
-VITE_MOTION=fancy npm run dev  # 纸账本版（Linux/macOS）
-```
-
-Windows PowerShell：
-
-```powershell
-$env:VITE_MOTION='fancy'; npm run dev
+npm run dev
 ```
 
 ## 打包
 
 ```bash
-# 纸账本版
-VITE_MOTION=fancy npm run build
-npx cap sync android
-cd android && ./gradlew assembleRelease -Pflavor=fancy
-
-# 简约版
 npm run build
 npx cap sync android
-cd android && ./gradlew assembleRelease -Pflavor=simple
+cd android && ./gradlew assembleRelease
 ```
 
-两个版本包名不同（`com.mio.ledger.fancy` / `com.mio.ledger`），可以同时安装。
-
-### 签名
-
-签名文件与密码不随仓库分发。在 `android/signing.properties` 里提供：
-
-```properties
-storeFile=release.jks
-storePassword=你的密码
-keyAlias=你的别名
-keyPassword=你的密码
-```
-
-`release.jks` 放在 `android/app/` 下，两者都已被 `.gitignore` 忽略。**请务必备份 keystore**，同一包名的后续版本必须使用同一签名。
+产物：`android/app/build/outputs/apk/release/app-release.apk`，包名 `com.mio.ledger.fancy`。
 
 ## 发布页
 
-`docs/` 是纯静态下载页，GitHub Pages 选择 `main` 分支的 `/docs` 目录即可：
-
-```
-docs/index.html
-docs/assets/icon.png
-docs/downloads/ledger-fancy-1.1.apk
-```
-
-页面里的下载链接指向 `docs/downloads/` 下的 APK，重新打包后覆盖同名文件即可。
+`docs/` 是静态下载页，重新打包后覆盖 `docs/downloads/` 下的 APK 即可。
 
 ## 数据
 

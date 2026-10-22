@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { isFancy } from '../motion'
 
 const props = defineProps<{
   value: number
@@ -9,15 +8,13 @@ const props = defineProps<{
 
 const text = computed(() => props.value.toFixed(props.decimals ?? 2))
 const chars = computed(() => text.value.split(''))
-/** 简约版直接出数，不做滚动 */
-const rollStyle = computed(() => ({ transitionDuration: isFancy ? '420ms' : '0ms' }))
 </script>
 
 <template>
   <span class="roll">
     <template v-for="(char, index) in chars" :key="`${index}-${chars.length}`">
       <span v-if="/\d/.test(char)" class="roll__digit">
-        <span class="roll__reel" :style="{ ...rollStyle, transform: `translateY(-${char}em)` }">
+        <span class="roll__reel" :style="{ transform: `translateY(-${char}em)` }">
           <span v-for="digit in 10" :key="digit" class="roll__cell">{{ digit - 1 }}</span>
         </span>
       </span>
