@@ -38,6 +38,7 @@ android/app/src/main/assets/capacitor.plugins.json
 *.jks
 *.keystore
 signing.properties
+SIGNING-NOTES.md
 
 # 发布产物（仅保留站点要分发的那个 APK）
 *.apk
@@ -50,3 +51,4 @@ docs/downloads/*
 .trae/
 .agents/
 .trae-html-share-packages/
+*-源码备份-*.zip
