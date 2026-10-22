@@ -272,6 +272,46 @@ html[data-theme='paper'] .van-cell-group--inset {
   box-shadow: none !important;
 }
 
+/* 弹层里不要白底分组，跟随纸面；弹层也不要用圆角 */
+html[data-theme='paper'] .van-cell-group {
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+html[data-theme='paper'] .van-popup--round {
+  border-radius: 0 !important;
+}
+
+/* 「编辑记录」弹层的支出 / 收入切换 */
+html[data-theme='paper'] .sheet__type {
+  background: var(--paper-panel) !important;
+  border: 1px solid var(--paper-line) !important;
+  border-radius: 0 !important;
+  color: var(--paper-ink) !important;
+}
+
+html[data-theme='paper'] .sheet__type--active {
+  background: var(--paper-ink) !important;
+  border-color: var(--paper-ink) !important;
+  color: var(--paper-bg) !important;
+  font-weight: 700;
+}
+
+html[data-theme='paper'] .sheet__amount {
+  border-bottom: 1px dashed var(--paper-line) !important;
+}
+
+html[data-theme='paper'] .sheet__amount-value {
+  color: var(--paper-ink) !important;
+  font-family: 'Songti SC', 'SimSun', Georgia, serif;
+  font-weight: 700;
+}
+
+html[data-theme='paper'] .sheet__amount-label,
+html[data-theme='paper'] .sheet__hint {
+  color: var(--paper-muted) !important;
+}
+
 html[data-theme='paper'] .summary {
   border-top: 3px double var(--paper-ink) !important;
   border-bottom: 3px double var(--paper-ink) !important;
