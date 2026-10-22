@@ -336,7 +336,7 @@ function handleSave(): void {
       </div>
     </div>
 
-    <van-popup v-model:show="editVisible" position="bottom" round class="editor">
+    <van-popup v-model:show="editVisible" position="bottom" round closeable class="editor">
       <template v-if="active">
         <h2 class="editor__title">编辑这条记录</h2>
 

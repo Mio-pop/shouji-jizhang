@@ -10,7 +10,7 @@ const counts = computed(() => ({
   parsed: store.records.filter((item) => item.source === 'parsed').length,
 }))
 
-const appVersion = '1.1.0'
+const appVersion = '1.2.0'
 </script>
 
 <template>

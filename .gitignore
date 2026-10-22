@@ -45,7 +45,7 @@ SIGNING-NOTES.md
 *.aab
 versions/
 docs/downloads/*
-!docs/downloads/ledger-fancy-1.1.apk
+!docs/downloads/ledger-fancy-*.apk
 
 # 其他
 .trae/
