@@ -39,11 +39,12 @@ android/app/src/main/assets/capacitor.plugins.json
 *.keystore
 signing.properties
 
-# 发布产物（APK 走 GitHub Releases，不进仓库）
+# 发布产物（仅保留站点要分发的那个 APK）
 *.apk
 *.aab
 versions/
-site/downloads/
+docs/downloads/*
+!docs/downloads/ledger-fancy-1.1.apk
 
 # 其他
 .trae/

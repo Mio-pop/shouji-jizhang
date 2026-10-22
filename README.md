@@ -21,7 +21,7 @@ src/                 # 页面、组件、store、解析与 OCR
   utils/parse.ts     # 文本解析（多条记录、商户行关联、噪音过滤）
   utils/ocr.ts       # 原生 ML Kit / Web tesseract 双通道
 android/             # Capacitor Android 工程
-site/                # 个人站点（下载页）
+docs/                # GitHub Pages 下载页（含发布的 APK）
 ```
 
 ## 本地开发
@@ -69,15 +69,15 @@ keyPassword=你的密码
 
 ## 发布页
 
-`site/` 是一个纯静态下载页，结构：
+`docs/` 是纯静态下载页，GitHub Pages 选择 `main` 分支的 `/docs` 目录即可：
 
 ```
-site/index.html
-site/assets/icon.png
-site/downloads/*.apk   # 本地预览用，不提交到仓库
+docs/index.html
+docs/assets/icon.png
+docs/downloads/ledger-fancy-1.1.apk
 ```
 
-部署到 GitHub Pages 时，把两个 APK 上传到 Releases，再把页面里的下载链接换成 Release 地址即可。
+页面里的下载链接指向 `docs/downloads/` 下的 APK，重新打包后覆盖同名文件即可。
 
 ## 数据
 
