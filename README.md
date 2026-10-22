@@ -74,7 +74,7 @@ keyPassword=你的密码
 ```
 docs/index.html
 docs/assets/icon.png
-docs/downloads/ledger-fancy-1.2.apk
+docs/downloads/ledger-fancy-1.2.1.apk
 ```
 
 页面里的下载链接指向 `docs/downloads/` 下的 APK，重新打包后覆盖同名文件即可。

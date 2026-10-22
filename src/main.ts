@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Vant from 'vant'
+import Vant, { showToast } from 'vant'
 import 'vant/lib/index.css'
 import { Capacitor } from '@capacitor/core'
 import { App as NativeApp } from '@capacitor/app'
@@ -23,26 +23,42 @@ app.mount('#app')
 
 /**
  * Android 返回键：默认会直接结束 Activity（退回桌面）。
- * 这里按「关弹层 → 回首页 → 最小化」三级处理，避免误退出与白屏。
+ * 这里按「关弹层 → 回首页 → 再按一次才退出」处理，避免误退出与白屏。
  */
+let lastBackAt = 0
+
 async function handleHardwareBack(): Promise<void> {
-  const popup = document.querySelector('.van-popup--active')
-  if (popup) {
-    const overlay = document.querySelector('.van-overlay') as HTMLElement | null
-    if (overlay) {
-      overlay.click()
-      return
-    }
-    await NativeApp.minimizeApp()
+  // 1. 有确认弹窗：先点「取消」
+  const dialogCancel = document.querySelector('.van-dialog__cancel') as HTMLElement | null
+  if (dialogCancel) {
+    dialogCancel.click()
     return
   }
 
+  // 2. 有底部弹层：点遮罩关闭（Vant 默认 close-on-click-overlay）
+  const overlay = document.querySelector('.van-overlay') as HTMLElement | null
+  if (overlay) {
+    overlay.click()
+    return
+  }
+
+  // 3. 不在首页：回首页
   if (router.currentRoute.value.path !== '/') {
+    lastBackAt = 0
     await router.replace('/')
     return
   }
 
-  await NativeApp.minimizeApp()
+  // 4. 在首页：两秒内再按一次才退出
+  const now = Date.now()
+  if (now - lastBackAt < 2000) {
+    lastBackAt = 0
+    await NativeApp.minimizeApp()
+    return
+  }
+
+  lastBackAt = now
+  showToast('再按一次返回，退出到桌面')
 }
 
 if (Capacitor.isNativePlatform()) {
